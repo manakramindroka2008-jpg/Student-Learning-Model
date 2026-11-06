@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student LMS | Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <span class="logo-icon">S</span>
+                <span>Student LMS</span>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="#" class="nav-link active">Dashboard</a>
+
+                <a href="#subjects" class="nav-link">Subjects</a>
+
+                <a href="#tasks" class="nav-link">Tasks & Deadlines</a>
+
+                <a href="#notes" class="nav-link">Notes</a>
+
+                <a href="#resources" class="nav-link">Learning Resources</a>
+
+            </nav>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Header -->
+            <header class="top-header">
+
+                <h1>Dashboard</h1>
+
+                <input type="search" placeholder="Search subjects, tasks, notes..." aria-label="Search dashboard">
+
+            </header>
+
+            <!-- Welcome Banner -->
+            <section class="welcome-banner">
+
+                <div class="welcome-text">
+
+                    <p class="welcome-label">
+                        YOUR PERSONAL STUDY SPACE
+                    </p>
+
+                    <h2>Ready to make progress today?</h2>
+
+                    <p>
+                        Organize your subjects, complete your tasks,
+                        and build better study habits.
+                    </p>
+
+                    <a href="#tasks" class="primary-btn">
+                        View My Tasks
+                    </a>
+
+                </div>
+
+            </section>
+
+            <!-- Dashboard Overview -->
+            <section class="overview">
+
+                <h2>Your Overview</h2>
+
+                <div class="overview-grid">
+
+                    <div class="overview-card">
+                        <h3>Total Subjects</h3>
+                        <p class="overview-number">3</p>
+                        <p class="card-description">
+                            Subjects you're learning
+                        </p>
+                    </div>
+
+                    <div class="overview-card">
+                        <h3>Pending Tasks</h3>
+                        <p class="overview-number">3</p>
+                        <p class="card-description">
+                            Tasks left to complete
+                        </p>
+                    </div>
+
+                    <div class="overview-card">
+                        <h3>Upcoming Deadlines</h3>
+                        <p class="overview-number">3</p>
+                        <p class="card-description">
+                            Deadlines approaching
+                        </p>
+                    </div>
+
+                    <div class="overview-card">
+                        <h3>Study Hours</h3>
+                        <p class="overview-number" id="totalStudyHours">17</p>
+                        <p class="card-description">Hours studied this week</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Main Dashboard Area -->
+            <div class="content-grid">
+
+                <!-- Subjects Section -->
+                <section class="dashboard-section" id="subjects">
+
+                    <div class="section-heading">
+                        <h2>My Subjects</h2>
+                        <button class="add-btn" id="logStudyBtn">
+                            + Log Study Hours
+                        </button>
+                        <button class="add-btn" id="addSubjectBtn">
+                            + Add Subject
+                        </button>
+                    </div>
+
+                    <!-- Add Subject Modal -->
+                    <div class="modal-overlay" id="subjectModal" hidden>
+
+                        <div class="modal-box">
+
+                            <div class="modal-header">
+                                <h2>Add New Subject</h2>
+                                <button type="button" id="closeModal">&times;</button>
+                            </div>
+
+                            <form id="subjectForm">
+
+                                <label for="subjectName">Subject Name</label>
+                                <input type="text" id="subjectName" placeholder="e.g. Mathematics" required>
+
+                                <label for="subjectHours">Target Hours Per Week</label>
+                                <input type="number" id="subjectHours" placeholder="e.g. 5" min="1" required>
+
+                                <div class="modal-actions">
+                                    <button type="button" class="cancel-btn" id="cancelModal">
+                                        Cancel
+                                    </button>
+
+                                    <button type="submit" class="add-btn">
+                                        Save Subject
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <div id="subjectsList">
+
+                        <!-- Mathematics -->
+                        <div class="subject-card" data-target="10" data-completed="6">
+                            <div class="subject-info">
+                                <h3>Mathematics</h3>
+                                <span>60%</span>
+                            </div>
+
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 60%"></div>
+                            </div>
+
+                            <p>6 / 10 hours completed this week</p>
+                        </div>
+
+                        <!-- Physics -->
+                        <div class="subject-card" data-target="8" data-completed="3">
+                            <div class="subject-info">
+                                <h3>Physics</h3>
+                                <span>37.5%</span>
+                            </div>
+
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 37.5%"></div>
+                            </div>
+
+                            <p>3 / 8 hours completed this week</p>
+                        </div>
+
+                        <!-- Programming -->
+                        <div class="subject-card" data-target="12" data-completed="8">
+                            <div class="subject-info">
+                                <h3>Programming</h3>
+                                <span>66.7%</span>
+                            </div>
+
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 66.7%"></div>
+                            </div>
+
+                            <p>8 / 12 hours completed this week</p>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Tasks and Deadlines Section -->
+                <section class="dashboard-section" id="tasks">
+
+                    <div class="section-heading">
+                        <h2>Tasks & Deadlines</h2>
+                        <a href="#tasks">View All</a>
+                    </div>
+
+
+                    <div class="task-card">
+
+                        <h3>Complete Mathematics Assignment</h3>
+
+                        <p>Subject: Mathematics</p>
+
+                        <p>Due: Tomorrow</p>
+
+                    </div>
+
+
+                    <div class="task-card">
+
+                        <h3>Revise Physics Chapter</h3>
+
+                        <p>Subject: Physics</p>
+
+                        <p>Due: In 3 days</p>
+
+                    </div>
+
+
+                    <div class="task-card">
+
+                        <h3>Practice JavaScript</h3>
+
+                        <p>Subject: Programming</p>
+
+                        <p>Due: In 5 days</p>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- Study Hours -->
+            <div class="bottom-grid">
+                <!-- Notes -->
+                <section class="dashboard-section" id="notes">
+
+                    <h2>My Notes</h2>
+
+                    <p>
+                        Keep your important study notes organized
+                        in one place.
+                    </p>
+
+                    <p>No notes added yet.</p>
+
+                </section>
+
+
+                <!-- Learning Resources -->
+                <section class="dashboard-section" id="resources">
+
+                    <h2>Learning Resources</h2>
+
+                    <p>
+                        Keep useful study materials and links
+                        within easy reach.
+                    </p>
+
+                    <p>No resources added yet.</p>
+
+                </section>
+            </div>
+
+
+        </main>
+
+    </div>
+    <!-- Log Study Hours Modal -->
+    <div class="modal-overlay" id="studyModal" hidden>
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+                <h2>Log Study Hours</h2>
+                <button type="button" id="closeStudyModal">&times;</button>
+            </div>
+
+            <form id="studyForm">
+
+                <label for="studySubject">Select Subject</label>
+
+                <select id="studySubject" required>
+                    <option value="">Choose a subject</option>
+                </select>
+
+                <label for="studyHoursInput">Hours Studied</label>
+
+                <input type="number" id="studyHoursInput" placeholder="Enter hours" min="0.1" max="24" step="0.1"
+                    required>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" id="cancelStudyModal">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="add-btn">
+                        Save Hours
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
