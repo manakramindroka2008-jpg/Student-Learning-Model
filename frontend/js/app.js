@@ -1,3 +1,8 @@
+
+/* =========================================
+   1. ADD SUBJECT MODAL
+========================================= */
+
 // Get HTML elements
 const addSubjectBtn = document.getElementById("addSubjectBtn");
 const subjectModal = document.getElementById("subjectModal");
@@ -5,7 +10,7 @@ const subjectModal = document.getElementById("subjectModal");
 const closeModal = document.getElementById("closeModal");
 const cancelModal = document.getElementById("cancelModal");
 
-// Open modal
+// Open Add Subject modal
 addSubjectBtn.addEventListener("click", function () {
     subjectModal.hidden = false;
 });
@@ -20,21 +25,26 @@ cancelModal.addEventListener("click", function () {
     subjectModal.hidden = true;
 });
 
-// Close modal by clicking outside the box
+// Close modal by clicking outside
 subjectModal.addEventListener("click", function (event) {
     if (event.target === subjectModal) {
         subjectModal.hidden = true;
     }
 });
 
-// Get the subject form elements
+
+/* =========================================
+   2. ADD NEW SUBJECT
+========================================= */
+
+// Get subject form elements
 const subjectForm = document.getElementById("subjectForm");
 const subjectsList = document.getElementById("subjectsList");
 
 const subjectName = document.getElementById("subjectName");
 const subjectHours = document.getElementById("subjectHours");
 
-// Handle form submission
+// Handle subject form submission
 subjectForm.addEventListener("submit", function (event) {
 
     event.preventDefault();
@@ -47,7 +57,7 @@ subjectForm.addEventListener("submit", function (event) {
         return;
     }
 
-    // Create a new subject
+    // Create a new subject card
     const subjectCard = document.createElement("div");
 
     subjectCard.classList.add("subject-card");
@@ -68,17 +78,27 @@ subjectForm.addEventListener("submit", function (event) {
         <p>0 / ${target} hours completed this week</p>
     `;
 
+    // Add subject to dashboard
     subjectsList.appendChild(subjectCard);
+
+    // Update total study hours
     updateTotalStudyHours();
 
+    // Close modal and reset form
     subjectModal.hidden = true;
     subjectForm.reset();
 
 });
 
-// Safely display user-entered text
+
+/* =========================================
+   3. HTML INPUT SECURITY
+========================================= */
+
 function escapeHTML(value) {
+
     return value.replace(/[&<>"']/g, function (character) {
+
         const entities = {
             "&": "&amp;",
             "<": "&lt;",
@@ -88,54 +108,15 @@ function escapeHTML(value) {
         };
 
         return entities[character];
+
     });
+
 }
 
-// Study Hours Tracker
 
-const completedHoursDisplay = document.getElementById("completedHours");
-const weeklyTargetDisplay = document.getElementById("weeklyTarget");
-const studyProgress = document.getElementById("studyProgress");
-const studyProgressText = document.getElementById("studyProgressText");
-
-const hoursInput = document.getElementById("hoursInput");
-const logHoursBtn = document.getElementById("logHoursBtn");
-
-// Display weekly target
-weeklyTargetDisplay.textContent = weeklyStudyTarget;
-
-// Update dashboard
-function updateStudyHours() {
-
-    completedHoursDisplay.textContent = completedStudyHours;
-
-    const percentage = Math.min(
-        (completedStudyHours / weeklyStudyTarget) * 100,
-        100
-    );
-
-    studyProgress.style.width = percentage + "%";
-
-    studyProgressText.textContent =
-        Math.round(percentage) + "% of weekly target completed";
-}
-
-// Log study hours
-logHoursBtn.addEventListener("click", function () {
-
-    const hours = Number(hoursInput.value);
-
-    if (!Number.isFinite(hours) || hours <= 0 || hours > 24) {
-        alert("Please enter a valid number of hours (maximum 24).");
-        return;
-    }
-
-    completedStudyHours += hours;
-
-    updateStudyHours();
-
-    hoursInput.value = "";
-});
+/* =========================================
+   4. TOTAL STUDY HOURS
+========================================= */
 
 function updateTotalStudyHours() {
 
@@ -146,12 +127,170 @@ function updateTotalStudyHours() {
     let totalHours = 0;
 
     subjectCards.forEach(function (card) {
+
         totalHours += Number(card.dataset.completed) || 0;
+
     });
 
     document.getElementById("totalStudyHours").textContent =
-        totalHours;
+        Number(totalHours.toFixed(2));
+
 }
 
-// Calculate total hours when the page loads
+// Calculate total hours when page loads
 updateTotalStudyHours();
+
+
+/* =========================================
+   5. SUBJECT-WISE STUDY HOURS TRACKER
+========================================= */
+
+// Get study modal elements
+const studyModal = document.getElementById("studyModal");
+
+const logStudyBtn = document.getElementById("logStudyBtn");
+
+const closeStudyModal = document.getElementById("closeStudyModal");
+const cancelStudyModal = document.getElementById("cancelStudyModal");
+
+const studyForm = document.getElementById("studyForm");
+
+const studySubject = document.getElementById("studySubject");
+const studyHoursInput = document.getElementById("studyHoursInput");
+
+
+// Load subjects into dropdown
+function loadSubjectOptions() {
+
+    studySubject.innerHTML = `
+        <option value="">Choose a subject</option>
+    `;
+
+    const subjectCards = document.querySelectorAll(
+        "#subjectsList .subject-card"
+    );
+
+    subjectCards.forEach(function (card, index) {
+
+        const name = card.querySelector("h3").textContent;
+
+        const option = document.createElement("option");
+
+        option.value = index;
+        option.textContent = name;
+
+        studySubject.appendChild(option);
+
+    });
+
+}
+
+
+// Open Log Study Hours modal
+logStudyBtn.addEventListener("click", function () {
+
+    loadSubjectOptions();
+
+    studyModal.hidden = false;
+
+});
+
+
+// Close study modal
+function closeStudyPopup() {
+
+    studyModal.hidden = true;
+
+    studyForm.reset();
+
+}
+
+closeStudyModal.addEventListener("click", closeStudyPopup);
+
+cancelStudyModal.addEventListener("click", closeStudyPopup);
+
+
+// Close modal by clicking outside
+studyModal.addEventListener("click", function (event) {
+
+    if (event.target === studyModal) {
+        closeStudyPopup();
+    }
+
+});
+
+
+// Handle study hours submission
+studyForm.addEventListener("submit", function (event) {
+
+    event.preventDefault();
+
+    const selectedIndex = Number(studySubject.value);
+
+    const hours = Number(studyHoursInput.value);
+
+    const subjectCards = document.querySelectorAll(
+        "#subjectsList .subject-card"
+    );
+
+    // Validate input
+    if (
+        studySubject.value === "" ||
+        !Number.isInteger(selectedIndex) ||
+        !subjectCards[selectedIndex] ||
+        !Number.isFinite(hours) ||
+        hours <= 0 ||
+        hours > 24
+    ) {
+
+        alert("Please select a subject and enter valid hours (maximum 24).");
+
+        return;
+
+    }
+
+    // Get selected subject
+    const selectedCard = subjectCards[selectedIndex];
+
+    let completed = Number(selectedCard.dataset.completed) || 0;
+
+    const target = Number(selectedCard.dataset.target);
+
+    if (!Number.isFinite(target) || target <= 0) {
+
+        alert("This subject has an invalid weekly target.");
+
+        return;
+
+    }
+
+    // Add newly studied hours
+    completed += hours;
+
+    selectedCard.dataset.completed = completed;
+
+    // Calculate progress percentage
+    const percentage = Math.min(
+        (completed / target) * 100,
+        100
+    );
+
+    // Update percentage
+    selectedCard.querySelector(".subject-info span").textContent =
+        percentage.toFixed(1).replace(/\.0$/, "") + "%";
+
+    // Update progress bar
+    selectedCard.querySelector(".progress").style.width =
+        percentage + "%";
+
+    // Update completed hours text
+    selectedCard.querySelector("p").textContent =
+        `${Number(completed.toFixed(2))} / ${target} hours completed this week`;
+
+    // Update total study hours
+    updateTotalStudyHours();
+
+    // Close popup
+    closeStudyPopup();
+
+});
